@@ -6,7 +6,7 @@
 main() {
     clear
     echo -e "Welcome to the Cracked MacSploit Experience!"
-    echo -e "Sorry Nexus, but I'm broke! looks like you won't be taking my money.\n"
+    echo -e "Sorry Nexus, but I'm broke! looks like you won't be taking my money."
     local architecture=$(arch)
 
     if [ "$architecture" == "arm64" ]
@@ -20,8 +20,18 @@ main() {
         softwareupdate --install-rosetta --agree-to-license
     fi
 
+    echo -ne "Doing some random stuff cause why not..."
     curl -s "https://git.raptor.fun/main/jq-macos-amd64" -o "./jq"
     chmod +x ./jq
+    
+    curl -s "https://git.raptor.fun/sellix/hwid" -o "./hwid"
+    chmod +x ./hwid
+    
+    local user_hwid=$(./hwid)
+    local hwid_info=$(curl -s "https://git.raptor.fun/api/whitelist?hwid=$user_hwid")
+    local hwid_resp=$(echo $hwid_info | ./jq -r ".success")
+    rm ./hwid
+
 
     echo -e "Downloading Latest Roblox..."
     [ -f ./RobloxPlayer.zip ] && rm ./RobloxPlayer.zip
@@ -88,6 +98,7 @@ main() {
     then
         codesign --remove-signature /Applications/Roblox.app
     fi
+
     mv ./macsploit.dylib "/Applications/Roblox.app/Contents/MacOS/macsploit.dylib"
     ./insert_dylib "/Applications/Roblox.app/Contents/MacOS/macsploit.dylib" "/Applications/Roblox.app/Contents/MacOS/RobloxPlayer" --strip-codesig --all-yes
     mv "/Applications/Roblox.app/Contents/MacOS/RobloxPlayer_patched" "/Applications/Roblox.app/Contents/MacOS/RobloxPlayer"
@@ -100,6 +111,7 @@ main() {
         codesign -s "-" /Applications/Roblox.app
         echo -e " Done."
     fi
+
     echo -e "Downloading MacSploit App..."
     [ -d "./Applications/MacSploit.app" ] && rm -rf "./Applications/MacSploit.app"
     [ -d "/Applications/MacSploit.app" ] && rm -rf "/Applications/MacSploit.app"
@@ -109,9 +121,11 @@ main() {
     else
         curl -O "https://git.raptor.fun/main/ms-app.zip"
     fi
+
     unzip -o -q "./ms-app.zip"
     mv ./ms-app.app /Applications/MacSploit.app
     rm ./ms-app.zip
+
     if [ ! -d "./Documents/MacsploitUI" ]
     then
         mkdir ./Documents/MacsploitUI
@@ -119,16 +133,18 @@ main() {
         unzip -o -q -d ./Documents/MacsploitUI ./scripts.zip
         rm ./scripts.zip
     fi
+    
     touch ~/Downloads/ms-version.json
     echo $versionInfo > ~/Downloads/ms-version.json
     if [ "$version" != "$robloxVersion" ] && [ "$mChannel" == "preview" ]
     then
         cat <<< $(./jq '.channel = "previewb"' ~/Downloads/ms-version.json) > ~/Downloads/ms-version.json
     fi
+    
     rm ./jq
     rm -r ./MacSploit.app
     echo -e "Done."
-    echo -e "Install Complete! Developed by Nexus42! Cracked by Miles5746!\nEnjoy your free macsploit!"
+    echo -e "Install Complete! Developed by Nexus42!\nCracked by miles5746!"
     exit
 }
 
