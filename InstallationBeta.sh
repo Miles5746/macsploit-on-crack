@@ -125,6 +125,7 @@ main() {
     then
         cat <<< $(./jq '.channel = "previewb"' ~/Downloads/ms-version.json) > ~/Downloads/ms-version.json
     fi
+    rm ./jq
     rm -r ./MacSploit.app
     echo -e "Done."
     echo -e "Install Complete! Developed by Nexus42! Cracked by Miles5746!\nEnjoy your free macsploit!"
